@@ -10,33 +10,46 @@ package ca.sheridancollege.project;
  * 
  #team
  */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class UnoGame {
 
-//playing uno game 
-     public static void main(String[] args) {
+    public static void main(String[] args) {
         UnoGame game = new UnoGame();
         game.playGame();
     }
 
     public void playGame() {
+        Scanner scanner = new Scanner(System.in);
+
         Deck deck = new Deck();
         deck.shuffle();
 
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
-
-        for (int i = 0; i < 7; i++) {
-            player1.drawCard(deck);
-            player2.drawCard(deck);
+        List<Player> players = new ArrayList<>();
+        System.out.print("Enter the number of players: ");
+        int numPlayers = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.print("Enter name for Player " + (i + 1) + ": ");
+            String playerName = scanner.nextLine();
+            players.add(new Player(playerName));
         }
 
-        System.out.println(player1.getName() + " hand: " + player1.getHand());
-        System.out.println(player2.getName() + " hand: " + player2.getHand());
+        for (Player player : players) {
+            for (int i = 0; i < 7; i++) {
+                player.drawCard(deck);
+            }
+            System.out.println(player.getName() + " hand: " + player.getHand());
+        }
 
-        Player currentPlayer = player1;
-        Card currentCard = deck.drawCard(); 
+        Card currentCard = deck.drawCard();
         System.out.println("Initial card on the pile: " + currentCard);
-        while (!isWinner(player1) && !isWinner(player2)) {
+
+        int currentPlayerIndex = 0;
+        while (!isAnyWinner(players)) {
+            Player currentPlayer = players.get(currentPlayerIndex);
             System.out.println(currentPlayer.getName() + "'s turn");
             System.out.println("Current card on the pile: " + currentCard);
             System.out.println(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
@@ -50,10 +63,11 @@ public class UnoGame {
                 currentPlayer.drawCard(deck);
             }
 
-            currentPlayer = (currentPlayer == player1) ? player2 : player1;
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
 
-        System.out.println("Game over! " + (isWinner(player1) ? player1.getName() : player2.getName()) + " wins!");
+        System.out.println("Game over! Winner: " + getWinner(players).getName());
+        scanner.close();
     }
 
     private boolean canPlay(Player player, Card currentCard) {
@@ -65,8 +79,21 @@ public class UnoGame {
         return false;
     }
 
-    private boolean isWinner(Player player) {
-        return player.getHand().isEmpty();
+    private boolean isAnyWinner(List<Player> players) {
+        for (Player player : players) {
+            if (player.getHand().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Player getWinner(List<Player> players) {
+        for (Player player : players) {
+            if (player.getHand().isEmpty()) {
+                return player;
+            }
+        }
+        return null; 
     }
 }
-  

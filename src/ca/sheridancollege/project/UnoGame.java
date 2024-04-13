@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package unogame_final;
+package ca.sheridancollege.project;
 
 /**
  *
@@ -10,11 +10,11 @@ package unogame_final;
  * 
  #team
  */
-public class UnoGame_final {
+public class UnoGame {
 
 //playing uno game 
      public static void main(String[] args) {
-        UnoGame_final game = new UnoGame_final();
+        UnoGame game = new UnoGame();
         game.playGame();
     }
 
